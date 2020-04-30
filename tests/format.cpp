@@ -12,11 +12,11 @@ TEST_CASE("reverse octets")
     CHECK(result == "22.121.123.127");
 }
 
-TEST_CASE("format address")
+TEST_CASE("toDNSName")
 {
     const auto address = "222.109.135.16";
 
-    const auto result = idragnev::formatAddress(address);
+    const auto result = idragnev::toDNSName(address);
 
     CHECK(result == "16.135.109.222.zen.spamhaus.org");
 }

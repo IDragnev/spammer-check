@@ -2,7 +2,18 @@
 #include <algorithm>
 
 namespace idragnev {
-    std::string formatAddress(std::string_view address) {
+    std::vector<std::string> toDNSNames(const std::vector<std::string_view>& addresses) {
+        auto result = std::vector<std::string>{};
+        result.reserve(addresses.size());
+
+        for (const auto& a : addresses) {
+            result.push_back(toDNSName(a));
+        }
+
+        return result;
+    }
+
+    std::string toDNSName(std::string_view address) {
         auto result = reverseOctets(address);
         result.append(".zen.spamhaus.org");
         
