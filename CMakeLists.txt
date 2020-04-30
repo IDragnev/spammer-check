@@ -18,3 +18,6 @@ source_group(core_source  REGULAR_EXPRESSION src/.*)
 source_group(core_headers REGULAR_EXPRESSION include/.*)
 
 add_subdirectory(app)
+add_subdirectory(src)
+add_subdirectory(extern/doctest)
+add_subdirectory(tests)

@@ -1,4 +1,5 @@
 set(ALL_APP_LIBS
+  main_lib
 )
 
 add_executable(spammer_check_exe main.cpp)
