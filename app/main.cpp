@@ -13,6 +13,9 @@ void printUsage(const std::string_view progname) noexcept;
 
 void printResponse(const std::vector<idragnev::LookupInfo>& infos) noexcept;
 
+template <typename... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template <typename... Ts> overloaded(Ts...)->overloaded<Ts...>;
+
 int main(const int argc, const char** argv) {
     if (argc < 2) {
         printUsage(argv[0]);
@@ -22,12 +25,14 @@ int main(const int argc, const char** argv) {
     const auto ipdAddresses = parseArgs(argc, argv);
     const auto result = idragnev::spamhausLookup(ipdAddresses);
 
-    if (result.has_value()) {
-        printResponse(result.value());
-    }
-    else {
-        print("Startup failed\n");
-    }
+    std::visit(overloaded{
+        [](const idragnev::StartupFailedTag) {
+            print("Startup failed\n");
+        },
+        [](const std::vector<idragnev::LookupInfo>& v) {
+            printResponse(v);
+        },
+    }, result);
 }
 
 void printUsage(const std::string_view progname) noexcept {
@@ -45,17 +50,22 @@ std::vector<std::string_view> parseArgs(const int argc, const char** argv) {
     return addresses;
 }
 
-void printResponse(const std::vector<idragnev::LookupInfo>& infos) noexcept {
-    for (const auto& addrInfo : infos) {
-        if (addrInfo.zones.has_value()) {
-            for (const auto& zone : addrInfo.zones.value()) {
-                print("The IP address: ", addrInfo.ipAddress,
-                      " was found in the following Spamhaus public IP zone: ", zone, "\n");
-            }
-            print("\n\n");
-        }
-        else {
-            print("Lookup for ", addrInfo.ipAddress, " failed\n\n");
-        }
+void printResponse(const std::vector<idragnev::LookupInfo>& response) noexcept {
+    for (const auto& addrInfo : response) {
+        std::visit(overloaded{
+            [&](const idragnev::NotASpammerTag&) { 
+                print("The IP address: ", addrInfo.ipAddress, " is not a spammer\n\n"); 
+            },
+            [&](const std::vector<idragnev::DSBLZone>& zones) {
+                for (const auto& zone : zones) {
+                    print("The IP address: ", addrInfo.ipAddress,
+                          " was found in the following Spamhaus public IP zone: ", zone, "\n");
+                }
+                print("\n\n");
+            },
+            [&](const idragnev::SocketError err) {
+                print("Lookup for ", addrInfo.ipAddress, " failed with error code ", err.code, "\n\n");
+            }, 
+        }, addrInfo.result);
     }
 }

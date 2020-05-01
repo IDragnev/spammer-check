@@ -28,9 +28,9 @@ namespace idragnev {
         F f;
     };
 
-    std::optional<std::vector<LookupInfo>> spamhausLookup(const std::vector<std::string_view>& ipAddresses) {
+    std::variant<StartupFailedTag, std::vector<LookupInfo>> spamhausLookup(const std::vector<std::string_view>& ipAddresses) {
         if (!detail::initialize()) {
-            return std::nullopt;
+            return StartupFailedTag{};
         }
 
         const auto _ = ScopedFn{ [] { WSACleanup(); } };
@@ -46,7 +46,7 @@ namespace idragnev {
             });
         }
 
-        return std::make_optional(std::move(result));
+        return std::move(result);
     }
 
     bool detail::initialize()
@@ -56,7 +56,7 @@ namespace idragnev {
         return result == 0;
     }
 
-    std::optional<std::vector<std::string>> detail::spamhausLookup(const std::string_view dnsName) {
+    LookupResult detail::spamhausLookup(const std::string_view dnsName) {
         const auto hints = [] {
             addrinfo hints;
             ZeroMemory(&hints, sizeof(hints));
@@ -72,11 +72,17 @@ namespace idragnev {
         addrinfo* response = nullptr;
         const auto ret = getaddrinfo(dnsName.data(), port.data(), &hints, &response);
 
-        return ret == 0 ? std::make_optional(parseResponse(response))
-                        : std::nullopt;
+        if (ret == 0) {
+            return parseResponse(response);
+        }
+        else if (ret == WSAHOST_NOT_FOUND) {
+            return NotASpammerTag{};
+        }
+        
+        return SocketError{ret};
     }
     
-    std::vector<std::string> detail::parseResponse(const addrinfo* const response) {
+    LookupResult detail::parseResponse(const addrinfo* const response) {
         std::vector<std::string> result;
 
         for (auto ptr = response; ptr != nullptr; ptr = ptr->ai_next) {
