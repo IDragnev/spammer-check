@@ -40,7 +40,10 @@ namespace idragnev {
 
         std::vector<LookupInfo> result;
         for (auto i = 0; i < dnsNames.size(); ++i) {
-            result.push_back(LookupInfo{ ipAddresses[i].data(), detail::spamhausLookup(dnsNames[i]) });
+            result.push_back(LookupInfo{ 
+                ipAddresses[i].data(),
+                detail::spamhausLookup(dnsNames[i])
+            });
         }
 
         return std::make_optional(std::move(result));
