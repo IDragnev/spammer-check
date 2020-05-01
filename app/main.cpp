@@ -55,7 +55,7 @@ void printResponse(const std::vector<idragnev::LookupInfo>& infos) noexcept {
             print("\n\n");
         }
         else {
-            print("Lookup for: ", addrInfo.ipAddress, " failed\n");
+            print("Lookup for ", addrInfo.ipAddress, " failed\n\n");
         }
     }
 }
