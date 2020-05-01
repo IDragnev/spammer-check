@@ -1,6 +1,6 @@
 # spammer-check
 
-A CLI application which checks IPv4 addresses for being spammers using DNSBL.
+A CLI application which checks IPv4 addresses for being spammers using [DBL](https://www.spamhaus.org/dbl/).
 
 ## Build
  - Windows only (because of Windows Sockets 2)
