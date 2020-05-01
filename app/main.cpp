@@ -7,7 +7,7 @@ inline void print(const Args&... args) noexcept {
     (std::cout << ... << args);
 }
 
-void printUsage(const char** argv) noexcept;
+void printUsage(const std::string_view progname) noexcept;
 
 [[nodiscard]] std::vector<std::string_view> parseArgs(const int argc, const char** argv);
 
@@ -15,7 +15,7 @@ void printResponse(const std::vector<idragnev::LookupInfo>& infos) noexcept;
 
 int main(const int argc, const char** argv) {
     if (argc < 2) {
-        printUsage(argv);
+        printUsage(argv[0]);
         return 1;
     }
    
@@ -30,8 +30,8 @@ int main(const int argc, const char** argv) {
     }
 }
 
-void printUsage(const char** argv) noexcept {
-    print("usage: ", argv[0], " { <hostname> }+ \n");
+void printUsage(const std::string_view progname) noexcept {
+    print("usage: ", progname, " { <hostname> }+ \n");
 }
 
 std::vector<std::string_view> parseArgs(const int argc, const char** argv) {
