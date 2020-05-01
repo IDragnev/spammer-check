@@ -83,7 +83,7 @@ namespace idragnev {
     }
     
     LookupResult detail::parseResponse(const addrinfo* const response) {
-        std::vector<std::string> result;
+        std::vector<DSBLZone> result;
 
         for (auto ptr = response; ptr != nullptr; ptr = ptr->ai_next) {
             const auto ip = ipAddress(ptr);
