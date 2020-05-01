@@ -3,8 +3,8 @@
 A CLI application which checks IPv4 addresses for being spammers using DNSBL.
 
 ## Build
- - Windows only
- - c++17 compliant compiler
+ - Windows only (because of Windows Sockets 2)
+ - C++17
  - CMake 3.10 or newer
  
  $ git clone --recursive https://github.com/IDragnev/spammer-check.git   
