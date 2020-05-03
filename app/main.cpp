@@ -36,7 +36,7 @@ int main(const int argc, const char** argv) {
 }
 
 void printUsage(const std::string_view progname) noexcept {
-    print("usage: ", progname, " { <hostname> }+ \n");
+    print("usage: ", progname, " { <ipv4_address> }+ \n");
 }
 
 std::vector<std::string_view> parseArgs(const int argc, const char** argv) {
