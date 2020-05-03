@@ -22,7 +22,7 @@ namespace idragnev {
     struct ScopedFn
     {
     public:
-        ScopedFn(F f) : f{ f } { }
+        ScopedFn(F f) : f{f} { }
         ~ScopedFn() { f(); }
     private:
         F f;
@@ -82,7 +82,7 @@ namespace idragnev {
         return SocketError{ret};
     }
     
-    LookupResult detail::parseResponse(const addrinfo* const response) {
+    std::vector<DSBLZone> detail::parseResponse(const addrinfo* const response) {
         std::vector<DSBLZone> result;
 
         for (auto ptr = response; ptr != nullptr; ptr = ptr->ai_next) {

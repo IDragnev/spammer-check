@@ -14,7 +14,7 @@ void printUsage(const std::string_view progname) noexcept;
 void printResponse(const std::vector<idragnev::LookupInfo>& infos) noexcept;
 
 template <typename... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template <typename... Ts> overloaded(Ts...)->overloaded<Ts...>;
+template <typename... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 int main(const int argc, const char** argv) {
     if (argc < 2) {

@@ -31,7 +31,7 @@ namespace idragnev {
     namespace detail {
         [[nodiscard]] bool initialize();
         LookupResult spamhausLookup(std::string_view dnsName);
-        LookupResult parseResponse(const addrinfo* const response);
+        std::vector<DSBLZone> parseResponse(const addrinfo* const response);
         std::string_view ipAddress(const addrinfo* const info);
         std::optional<std::string_view> spamhausZone(const std::string_view ip) noexcept;
     } //namespace detail
