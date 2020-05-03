@@ -16,4 +16,4 @@ A CLI application which checks IPv4 addresses for being spammers using [DBL](htt
  ```
  
  ## Usage
-  spammer_check.exe { \<hostname\> }<sup>+<sup/>
+  spammer_check.exe { \<ipv4_address\> }<sup>+<sup/>
